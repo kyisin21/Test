@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Search</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .active-dot {
+            background-color: green;
+        }
+
+        .inactive-dot {
+            background-color: red;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 3px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <label for="searchInput">Search by Employee Name:</label>
+    <input type="text" id="searchInput" oninput="searchEmployees()">
+    <button onclick="refreshPage()">Refresh</button>
+
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th>Company</th>
+                <th>Department</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <script>
+       const jsonData = {
+    "RND": {
+      "ERP": {
+        "Employee1": {"name": "Aung Aung", "Age": "19", "Status": "Active"},
+        "Employee2": {"name": "Khant Kyaw Htet", "Age": "21", "Status": "Inactive"},
+        "Employee3": {"name": "Pa Pa Oo", "Age": "31", "Status": "Active"}
+  
+      },
+      "OSS": {
+        "Employee1": {"name": "Khant Si Thu", "Age": "17", "Status": "Inactive"},
+        "Employee2": {"name": "Oak Soe Khant", "Age": "22", "Status": "Active"},
+        "Employee3": {"name": "Khine Su Lat", "Age": "24", "Status": "Inactive"},
+        "Employee4": {"name": "Khin Khin Aye", "Age": "26", "Status": "Active"},
+        "Employee5": {"name": "Kyaw Min Aung", "Age": "28", "Status": "Inactive"},
+        "Employee6": {"name": "Shwe Yee Win", "Age": "23", "Status": "Inactive"}
+      }
+    },
+    "CSS": {
+      "En": {
+        "Employee1": {"name": "Aung Min Khant", "Age": "16", "Status": "Inactive"},
+        "Employee2": {"name": "Min Khant Kyaw", "Age": "18", "Status": "Active"}
+      },
+      "Mdy": {
+        "Employee1": {"name": "Htoo Aung Kyaw", "Age": "22", "Status": "Active"},
+        "Employee2": {"name": "May Thazin", "Age": "24", "Status": "Inactive"}
+      },
+      "Bago": {
+        "Employee1": {"name": "Aung Kyaw Moe", "Age": "22", "Status": "Inactive"},
+        "Employee2": {"name": "Ant Htoo Naung", "Age": "24", "Status": "Active"}
+      }
+    }
+    
+  };
+
+        function searchEmployees() {
+            const searchInput = document.getElementById('searchInput').value.toLowerCase();
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            for (const company in jsonData) {
+                for (const department in jsonData[company]) {
+                    for (const employee in jsonData[company][department]) {
+                        const employeeData = jsonData[company][department][employee];
+                        const employeeName = employeeData.name.toLowerCase();
+
+                        if (employeeName === searchInput || employeeName.startsWith(searchInput)) {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `<td>${company}</td><td>${department}</td><td>${employeeData.name}</td><td>${employeeData.Age}</td><td>${getStatusDot(employeeData.Status)} ${employeeData.Status}</td>`;
+                            tableBody.appendChild(row);
+                        }
+                    }
+                }
+            }
+        }
+
+        function getStatusDot(status) {
+            return `<div class="status-dot ${status.toLowerCase()}-dot"></div>`;
+        }
+
+        function refreshPage() {
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>
